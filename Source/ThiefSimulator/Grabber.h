@@ -4,18 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Engine/TriggerVolume.h"
-#include "OpenDoor.generated.h"
+#include "Grabber.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class THIEFSIMULATOR_API UOpenDoor : public UActorComponent
+class THIEFSIMULATOR_API UGrabber : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UOpenDoor();
+	UGrabber();
 
 protected:
 	// Called when the game starts
@@ -24,30 +23,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void OpenDoor(float DeltaTime, float TargetYaw, int Speed);
 
 private:
-	float InitialYaw;
-	float CurrentYaw;
-	float DoorLastOpened = 0.f;
 
 	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 0.25;
+	float Reach = 100;
 
 	UPROPERTY(EditAnywhere)
-	int DoorOpenSpeed = 2;
+	float Width = 10;
 
-	UPROPERTY(EditAnywhere)
-	int DoorCloseSpeed = 5;
-
-	UPROPERTY(EditAnywhere)
-	float OpenAngle = 110.f;
-
-	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
-
-	UPROPERTY(EditAnywhere)
-	AActor* ActorThatOpens;
-
-		
 };

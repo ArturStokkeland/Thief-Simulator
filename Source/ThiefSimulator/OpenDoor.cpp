@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
+#include "OpenDoor.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -40,18 +39,21 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorThatOpens)) {
-		OpenDoor(DeltaTime, OpenAngle);
+		OpenDoor(DeltaTime, OpenAngle, DoorOpenSpeed);
+		DoorLastOpened = GetWorld()->GetTimeSeconds();
 	}
 	else {
-		OpenDoor(DeltaTime, InitialYaw);
+		if (GetWorld()->GetTimeSeconds() - DoorLastOpened > DoorCloseDelay) {
+			OpenDoor(DeltaTime, InitialYaw, DoorCloseSpeed);
+		}
 	}
 	
 }
 
-void UOpenDoor::OpenDoor(float DeltaTime, float TargetYaw) {
+void UOpenDoor::OpenDoor(float DeltaTime, float TargetYaw, int Speed) {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
 	FRotator OpenDoor(0.f, TargetYaw, 0.f);
-	OpenDoor.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, 2);
+	OpenDoor.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, Speed);
 
 	GetOwner()->SetActorRotation(OpenDoor);
 }
